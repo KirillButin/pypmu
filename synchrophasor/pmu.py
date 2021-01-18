@@ -303,6 +303,7 @@ class Pmu(object):
                             logger.warning("[%d] - Received unknown message <- (%s:%d)", pmu_id, address[0], address[1])
                     else:
                         logger.warning("[%d] - Message not received completely <- (%s:%d)", pmu_id, address[0], address[1])
+                        print(received_data)
 
                 if command:
                     if command == "start":
