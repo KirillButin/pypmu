@@ -260,6 +260,9 @@ class Pmu(object):
         else:
             delay = -data_rate
 
+        print(data_rate)
+        print(delay)
+
         try:
             while True:
 
@@ -273,6 +276,7 @@ class Pmu(object):
                     Should get this in first iteration. FRAMESIZE is needed to determine when one complete message
                     has been received.
                     """
+                    print("Get CMD")
                     while len(received_data) < 4:
                         received_data += connection.recv(buffer_size)
 
@@ -304,6 +308,8 @@ class Pmu(object):
                     else:
                         logger.warning("[%d] - Message not received completely <- (%s:%d)", pmu_id, address[0], address[1])
                         print(received_data)
+                        sending_measurements_enabled = False
+                        command = "cfg2"
 
                 if command:
                     if command == "start":
@@ -329,6 +335,7 @@ class Pmu(object):
                     elif command == "cfg2":
                         if set_timestamp: cfg2.set_time()
                         connection.sendall(cfg2.convert2bytes())
+                        print("send cfg 2")
                         logger.info("[%d] - Requested Configuration frame 2 sent -> (%s:%d)",
                                     pmu_id, address[0], address[1])
 
@@ -345,6 +352,7 @@ class Pmu(object):
                         if set_timestamp: data.set_time()
                         data = data.convert2bytes()
 
+                  #  print(delay)
                     sleep(delay)
                     connection.sendall(data)
                     logger.debug("[%d] - Message sent at [%f] -> (%s:%d)",
